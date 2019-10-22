@@ -1,2 +1,2 @@
 # Estadistica
-Clases de estadistica 2019
+Desarrollo ejercicios de las clases de estadistica 2019
