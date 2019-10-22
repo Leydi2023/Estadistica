@@ -1,0 +1,201 @@
+Leydi Julieth Dazlicencia GPL-2
+
+#ejercicios semana tres variables y frecuencias
+
+# Ver los set de datos para los paquetes cargado actualmente
+
+data()
+
+# Ver los set de datos para todos los paquetes instalados
+
+data(package = .packages(all.available = TRUE))
+
+#primero debemos verificar si tenemos descargados los siguientes paquetes para la realizacion de la practica 
+
+library(ape)
+library(permute)
+library(vegan)
+library(ade4)
+library(geiger)
+
+#en caso tal de no tener instalado alguno de los paquetes procedemos a descargarlos de la siguiente manera
+install.packages("permute","vegan")
+
+#entre la comillas el nombre de los paquetes que no estan instalados 
+#una vez descargados todos los paquetes se cargan los paquetes de datos para la practica
+
+# Paquete ape
+data(carnivora)
+
+#Paquete permute
+data(jackal)
+
+#Paquete vegan
+data(jackal)
+
+data(BCI)
+
+data(mite.env)
+
+#Paquete ade4
+data(atlas)
+
+data(carniherbi49)
+
+data(corvus)
+
+data(tortues)
+
+#Paquete geiger
+data(geospiza)
+
+#Ejer: ¿Que clase de objeto es BIC? ¿Qué clase de objeto es geospiza?
+#use la función *str* para obtener información sobre la estructura
+
+class(BIC)
+[1] "function"
+class(geospiza)
+[1] "list"
+
+str(geospiza)
+str(BIC)
+
+# ¿Qué es geospiza?(informacion sobre los datos: autor,significado de las variables etc.)
+
+help("geospiza")
+
+#Ejer: ¿Qué tipo de variable es tarsusL y qué clase? 
+#Abra el objeto *tortues* y mire ¿Qué tipo de variables tiene y qué clase son?,
+#Haga lo mismo con el objeto *mite.env* y revise ¿Qué tipo de variable es *shurb* y qué clase es?Recuerde siempre usar help para saber de donde vienen los datos.
+  
+class(geospiza$tarsusL)
+[1] "NULL"
+
+
+View(tortues)
+class(tortues)
+[1] "data.frame"
+class(tortues$long)
+[1] "numeric"
+class(tortues$larg)
+[1] "numeric"
+class(tortues$haut)
+[1] "numeric"
+class(tortues$sexe)
+[1] "factor"
+
+View(mite.env)
+class(mite.env)
+[1] "data.frame"
+class(mite.env$SubsDens)
+[1] "numeric"
+class(mite.env$WatrCont)
+[1] "numeric"
+class(mite.env$Substrate)
+[1] "factor"
+class(mite.env$Shrub)
+[1] "ordered" "factor" 
+class(mite.env$Topo)
+[1] "factor"
+
+#Ejer: usando el data.frame *tortues* calcule la proporción de hembras y machos de la muestra
+  
+#proporcion de machos
+sex <- c('F', 'M')
+M <- length(which(tortues == 'M'))
+M
+[1] 24
+#proporcion de hembras
+F <- length(which(tortues == 'F'))
+F
+[1] 24
+propocion de hembras/machos 
+paste(F,'/',M,sep = '')
+[1] "24/24"
+F/M
+[1] 1  
+#Esto quiere decir  que por cada macho hay una hembra
+
+#Ejer:usando el data.frame *tortues* calcule la proporción entre el ancho y el largo del caparazón, 
+#genere una tabla con la información de *tortues* 
+#y la nueva variable derivada.
+
+medidas <-cbind(tortues$long,tortues$larg)
+colnames(medidas)<-c("Largo","Ancho")
+proporcion <- tortues$long/tortues$larg
+relacion <-cbind(medidas,proporcion)
+relacion
+
+#¿Cuántas especies de *Corvus* fueron muestreadas en la región Paleártica-Africana? Use el data.frame del género 
+#*Corvus*. 
+no.muestreos <- table(corvus$phylog)
+no.muestreos
+#9 especies
+
+#¿Qué porcentaje de *Corvus* muestreados habitan zonas abiertas
+
+zonas <- table(corvus$habitat)
+zonas
+prop.table(zonas)
+#0.61%
+
+#Ejer: ¿Cómo luce el gráfico de frecuencias para los tipos de hábitat del género *Corvus*?
+
+plot(prop.table(zonas), main= "Corvus por habitat", ylab ="Frecuencia de la sp", col=c("green","orange"))
+
+#Encuentre el máximo, así como lo hizo para el mínimo
+atlas$birds
+sp <- apply(atlas$birds,2,sum)
+sp
+max(sp)
+which.max(sp)
+
+min(sp)
+which.min(sp)
+
+
+#Ejer: Repita el ejercicio para las variables continuas de tamaño de pico y tamaño del ala en el género *Corvus*. 
+#Busque cómo cambiar colores, ejes y algunas propiedades que le permitan mejorar el diseño del histograma.  
+
+
+# maximo y minimo del pico
+
+max(corvus$bill)
+min(corvus$bill)
+range(corvus$bill)
+
+#maximo y minimo del las alas 
+
+max(corvus$wing)
+min(corvus$wing)
+range(corvus$wing)
+
+# histogramas
+
+hist(corvus$bill, main = "Hist picos de Corvus" ,xlab = "Tamaño (mm)", col= rainbow(4))
+hist(corvus$wing, main = "Hist alas de Corvus" ,xlab = "Tamaño (mm)",col= rainbow(8))
+
+#Ejer:Invente unos datos de medidas, como se hizo en el caso de los craneos, y genere todo el ejercicio hasta el histograma 
+
+#Medidas arbol tabebuia rosea en Bucaramanga
+Alto <- rnorm(n = 50, mean = 60, sd = 6)
+Ancho <- rnorm(n = 50, mean = 15, sd = 3)
+
+Promedio<-Alto/Ancho
+Promedio
+Tabebuia_rosea<- cbind(Ancho, Alto,Promedio)
+Tabebuia_rosea
+Table_Tabebuia <- as.data.frame(cbind(paste('spp',1:50,sep = '_'),Tabebuia_rosea))
+Table_Tabebuia
+colnames(Table_Tabebuia) <- c("arbol", "Ancho","alto","promedio")
+hist(Table_Tabebuia$Promedio, main = "Relacion datos Tabebuia")
+hist(Table_Tabebuia$promedio, main = "Relacion datos")
+
+
+Promedio<-Alto/Ancho
+Promedio
+Tabebuia_rosea<- cbind.data.frame(Ancho, Alto,Promedio)
+Tabebuia_rosea
+Table_Tabebuia <- as.data.frame(cbind(paste('spp',1:50,sep = '_'),Tabebuia_rosea))
+
+hist(Table_Tabebuia$Promedio, main = "Relacion datos Tabebuia", xlab = "Promedio", col= terrain.colors(7))
