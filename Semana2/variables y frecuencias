@@ -1,6 +1,8 @@
-Leydi Julieth Dazlicencia GPL-2
+Leydi Julieth Daz
+licencia GPL-2
 
-#ejercicios semana tres variables y frecuencias
+#ejercicios semana tres :variables y frecuencias
+
 
 # Ver los set de datos para los paquetes cargado actualmente
 
@@ -141,7 +143,7 @@ prop.table(zonas)
 
 #Ejer: ¿Cómo luce el gráfico de frecuencias para los tipos de hábitat del género *Corvus*?
 
-plot(prop.table(zonas), main= "Corvus por habitat", ylab ="Frecuencia de la sp", col=c("green","orange"))
+plot(prop.table(zonas), main= "Corvus por habitat", ylab ="Frecuencia de la sp", col=c("pink","orange"))
 
 #Encuentre el máximo, así como lo hizo para el mínimo
 atlas$birds
@@ -157,7 +159,6 @@ which.min(sp)
 #Ejer: Repita el ejercicio para las variables continuas de tamaño de pico y tamaño del ala en el género *Corvus*. 
 #Busque cómo cambiar colores, ejes y algunas propiedades que le permitan mejorar el diseño del histograma.  
 
-
 # maximo y minimo del pico
 
 max(corvus$bill)
@@ -172,8 +173,8 @@ range(corvus$wing)
 
 # histogramas
 
-hist(corvus$bill, main = "Hist picos de Corvus" ,xlab = "Tamaño (mm)", col= rainbow(4))
-hist(corvus$wing, main = "Hist alas de Corvus" ,xlab = "Tamaño (mm)",col= rainbow(8))
+hist(corvus$bill, main = "Hist picos de Corvus" ,xlab = "Tamaño mm", col= "yellowgreen")
+hist(corvus$wing, main = "Hist alas de Corvus" ,xlab = "Tamaño mm",col= "tan1")
 
 #Ejer:Invente unos datos de medidas, como se hizo en el caso de los craneos, y genere todo el ejercicio hasta el histograma 
 
@@ -199,3 +200,4 @@ Tabebuia_rosea
 Table_Tabebuia <- as.data.frame(cbind(paste('spp',1:50,sep = '_'),Tabebuia_rosea))
 
 hist(Table_Tabebuia$Promedio, main = "Relacion datos Tabebuia", xlab = "Promedio", col= terrain.colors(7))
+
