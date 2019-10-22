@@ -1,5 +1,3 @@
-Leydi Julieth Daz
-licencia GPL-2
 
 #ejercicios semana tres :variables y frecuencias
 
@@ -23,8 +21,7 @@ library(geiger)
 #en caso tal de no tener instalado alguno de los paquetes procedemos a descargarlos de la siguiente manera
 install.packages("permute","vegan")
 
-#entre la comillas el nombre de los paquetes que no estan instalados 
-#una vez descargados todos los paquetes se cargan los paquetes de datos para la practica
+#cargar los paquetes de datos para la practica
 
 # Paquete ape
 data(carnivora)
@@ -64,7 +61,7 @@ str(BIC)
 
 # ¿Qué es geospiza?(informacion sobre los datos: autor,significado de las variables etc.)
 
-help("geospiza")
+?geospiza
 
 #Ejer: ¿Qué tipo de variable es tarsusL y qué clase? 
 #Abra el objeto *tortues* y mire ¿Qué tipo de variables tiene y qué clase son?,
@@ -116,7 +113,7 @@ paste(F,'/',M,sep = '')
 [1] "24/24"
 F/M
 [1] 1  
-#Esto quiere decir  que por cada macho hay una hembra
+# Por cada macho hay una hembra
 
 #Ejer:usando el data.frame *tortues* calcule la proporción entre el ancho y el largo del caparazón, 
 #genere una tabla con la información de *tortues* 
@@ -130,20 +127,21 @@ relacion
 
 #¿Cuántas especies de *Corvus* fueron muestreadas en la región Paleártica-Africana? Use el data.frame del género 
 #*Corvus*. 
-no.muestreos <- table(corvus$phylog)
-no.muestreos
+
+muestreos <- table(corvus$phylog)
+muestreos
 #9 especies
 
 #¿Qué porcentaje de *Corvus* muestreados habitan zonas abiertas
 
-zonas <- table(corvus$habitat)
-zonas
-prop.table(zonas)
+zonasa <- table(corvus$habitat)
+zonasa
+prop.table(zonasa)
 #0.61%
 
 #Ejer: ¿Cómo luce el gráfico de frecuencias para los tipos de hábitat del género *Corvus*?
 
-plot(prop.table(zonas), main= "Corvus por habitat", ylab ="Frecuencia de la sp", col=c("pink","orange"))
+plot(prop.table(zonasa), main= "Corvus por habitat", ylab ="Frecuencia de la sp", col=c("pink","orange"))
 
 #Encuentre el máximo, así como lo hizo para el mínimo
 atlas$birds
