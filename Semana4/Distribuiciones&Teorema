@@ -94,5 +94,5 @@ estadisticos
 density(estadisticos)
 
 #Histograma
-hist(estadisticos, main="DISTRIBUCIÓN DE PESOS DE PECES", xlab= "Peso", ylab="Frecuencia", col= "green")
+hist(estadisticos, main="DISTRIBUCIÓN DE PESOS DE PECES", xlab= "Peso", ylab="Frecuencia", col= "mediumaquamarine")
 
