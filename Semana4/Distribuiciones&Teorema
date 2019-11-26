@@ -63,3 +63,36 @@ legend(x = "topright",
        c("Density plot", "Mean", "Median"),
        col = c("royalblue", "mediumpurple1", "red4"),
        lwd = c(2, 2, 2))
+       
+       
+#Ejer:Simule 5000 peces de criadero en un tanque, todos son de la misma cohorte. Imagine que los organiza en fila y quiere seleccionar 100 para calcular estadísticos de la población. 
+#Haga un muestreo sistemático y calcule los estadísticos y descriptivos vistos anteriormente. Grafique.
+
+#Muestreo peces
+pesopeces= abs(rnorm(5000, 10, 1))
+?rnorm
+pesopeces
+
+#Muestreo sistematico
+N<- 5000
+n<- 100
+K<- N/n
+k
+
+#Primero
+sample(1:K, 1)
+?seq
+grupo<- seq(10, 5000, 50)
+grupo
+str(grupo)
+
+#Muestreo
+estadisticos<- pesopeces[grupo]
+estadisticos
+
+#Esradisticos
+density(estadisticos)
+
+#Histograma
+hist(estadisticos, main="DISTRIBUCIÓN DE PESOS DE PECES", xlab= "Peso", ylab="Frecuencia", col= "green")
+
