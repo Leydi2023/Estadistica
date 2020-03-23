@@ -1,0 +1,326 @@
+title: "Semana14_Anova"
+#autores: Marìa Josè Duarte Alvarado 
+#Lesly Dayana Castillo 
+#Leydi Diaz Avila 
+#date: "03/10/2020"
+
+---
+  
+  ## Instalar paquetes
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(ggpubr)){install.packages("ggpubr")}
+if(!require(rstatix)){install.packages("rstatix")}
+if(!require(car)){install.packages("car")}
+if(!require(multcomp)){install.packages("multcomp")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(multcomp)
+
+
+#*_EJER:_* vuelva a realizar el estimaciÃ³n sin eliminar 
+#outliers. EvalÃºe los supuesto de la anova en la variable peso.  ¿QuÃ© encuentra?  
+#¿QuÃ© supuesto no se cumple? Si no se cumple algÃºn supuesto  ¿QuÃ© deberÃ�a probar antes de pensar en una prueba no paramÃ©trica?
+  
+#Los supuestos que se deben cumplir son: independencia, no outlier,  variables con distribucion 
+# cercana a la normal, homogeneidad de varianzas. 
+
+#Independencia  .
+levels(PlantGrowth$group)
+# independientes
+
+
+# Identificando outliers
+
+  PlantGrowth2 <- data.frame(ctrl=PlantGrowth[which(PlantGrowth$group==levels(PlantGrowth$group)[1]),1],
+                             trt1=PlantGrowth[which(PlantGrowth$group==levels(PlantGrowth$group)[2]),1],
+                             trt2=PlantGrowth[which(PlantGrowth$group==levels(PlantGrowth$group)[3]),1])
+  
+  head(PlantGrowth2 )
+  
+  OutVals = boxplot(PlantGrowth2)$out
+  
+  #Si presenta outliers el tratamiento 1 
+  
+ #Distribucion normal
+  
+  #Se realizo un grafico Q-Q para evaluar 
+  #la normalidad, sin embargo tambien realizaremos
+  # otros test para confirmar
+  
+  ggplot(PlantGrowth, aes(sample = weight, colour = group )) +
+    stat_qq() +
+    stat_qq_line()
+
+  # Utilizamos el test de Shapiro- Wilk, debido a que el 
+  # tamaño de la muestra es menor a 50 
+  
+  Tratamiento_ctrl <-  PlantGrowth[which (PlantGrowth$group == "ctrl"),]
+  shapiro.test(x =  Tratamiento_ctrl$weight) 
+  
+  # Obtenemos un p valor 0.7475 > 0.05 es decir hay una distribucion
+  #Normal 
+  
+ Tratamiento_1<- PlantGrowth[which(PlantGrowth$group == "trt1"),]
+ shapiro.test(x = Tratamiento_1$weight) 
+ 
+ # Obtenemos un p valor 0.4519 > 0.05 es decir hay una distribucion
+ #Normal 
+  
+Tratamiento_2 <- PlantGrowth[which(PlantGrowth$group == "trt2"),]
+shapiro.test(x = Tratamiento_2$weight) 
+
+# Obtenemos un p valor 0.5643 > 0.05 es decir hay una distribucion
+#Normal
+  
+  #Homogeneidad de varianzas- Homocedasticidad
+# Barlett 
+
+#Especial para cuando no se tienen muestras con tamaños iguales. Es sensible a normalidad. 
+#Si lo datos cumplen con normalidad es la mejor opción.
+
+bartlett.test(PlantGrowth$weight ~ PlantGrowth$group)
+
+#H0: las muestras presentan varianzas iguales
+#H1: las muestras presentan varianzas distintas
+
+##  Obtenemos un p valor de 0.2371 > 0.05, es decir 
+# aceptamos la hipotesis nula (H0). Lo cual indica que 
+#nuestros 3 tratamientos presentan varianzas iguales. 
+
+# Ya se revisamos todos los supuestos de la prueba, 
+#entonces procedemos a estimar si existen diferencias entre 
+#las medias de los tres tratamientos
+
+
+# Anova
+anov <- aov(PlantGrowth$weight ~ PlantGrowth$group)
+summary(anov) 
+#Existen diferencias significativas entre los tratamientos
+#Como nos lo indica el p valor 0.0159 < 0.05
+
+#Se encontró que los p valores no fueron iguales mientras que con outliers fue de 0.0159,
+# sin outliers fue de 0.00256 ambos son significativos es decir hay varianza por lo cual  las medias de los tratamientos no son iguales  
+#El supuesto que no se cumple es el que dice que las medias son iguales.  
+#Se debería ver cual el supuesto que esta fallando o no se cumple, si es por ejemplo el supuesto de distribución normal o el de homogeneidad de varianzas, se debe transformar, antes de pasar a las no paramétricas 
+
+
+#Para saber entre que tratamientos son estas diferencias 
+#recurrimos a pruebas parametricas como test post-hoc de Tukey
+
+# Test post-hoc de Tukey 
+TukeyHSD(anov) 
+#La diferencia se presenta entre el tratamiento 2 y 
+#el tratamiento 1 
+
+
+#Ejer: Lea los datos de morphological_data.csv. Haga una análisis de varianza para la primera variable de medida ‘BL’. 
+#Recuerde que para realizar un análisis de varianza debe evaluar los supuesto de la prueba.
+  
+  library(readxl)
+  
+  Morphological_data <- read_excel("~/Estadistica Laboratorio/Semana 12/Morphological_data.xls")
+  View(Morphological_data)
+  
+Morphological <- data.frame(Morphological_data$GENDER, Morphological_data$BL)
+Morphological 
+
+  #Evaluacion de los supuestos 
+  
+  #Independencia  .
+  levels(Morphological$Morphological_data.GENDER)
+  # Variables independientes por genero 
+  
+  # Identificando outliers
+  
+  boxplot(Morphological$Morphological_data.BL~Morphological$Morphological_data.GENDER, xlab = "GENDER", ylab = "BL")
+  #outliers en F y M
+  OutVals = boxplot(Morphological$Morphological_data.BL~Morphological$Morphological_data.GENDER, xlab = "GENDER", ylab = "BL")$out
+  OutVals 
+  #Outliers son 13.39, 12.81,12.82, 11.61
+  
+  #Distribucion normal
+  
+  #Se realizo un grafico Q-Q para evaluar 
+  #la normalidad, sin embargo tambien realizaremos
+  # otros test para confirmar
+  
+  ggplot(Morphological_data, aes(sample = BL, colour = GENDER )) +
+    stat_qq() +
+    stat_qq_line()
+  
+  # Utilizamos el test de Lilliefors , debido a que el 
+  # tamaño de la muestra es muy grande 
+
+  M <- Morphological[which(Morphological$Morphological_data.GENDER== "M"),] 
+  lillie.test(x = M$Morphological_data.BL) # Normal 
+  
+  F <- Morphological[which(Morphological$Morphological_data.GENDER== "F"),]
+  lillie.test(x = F$Morphological_data.BL) # Normal
+ 
+  #Homogeneidad de varianzas
+  
+  leveneTest(Morphological$Morphological_data.BL ~ Morphological$Morphological_data.GENDER)
+  #Si  hay homogeneidad de varianzas, es decir, la varianza  es igual entre los generos.
+  
+  
+  #El supuesto que no se cumple es el de los outliners 
+  
+  anov2 <- aov(Morphological_data$BL ~ Morphological_data$GENDER)
+  summary(anov2)
+  
+  #Si hay diferencias significativas entres los grupos. 
+  
+  #Como el p valor es inferior a 0.05 entonces las medias son diferentes es decir hay
+  # variabilidad 
+  
+  
+  
+  
+   #Â¿QuÃ© otro tipo de Anovas existen? Â¿Es lo mismo dos factores que anidado? Â¿CuÃ¡l es el caso de los niveles de azÃºcar en los nectarios de gulupa y la maracuya? 
+  #Haga el anÃ¡lisis de varianza para este caso.
+  
+  #¿Que otro tipo de Anovas existen?
+    
+#El análisis factorial de varianzas permite que tres o más factores pueden analizarse 
+  #simultáneamente. No permitir ninguna medición del error básico del experimento y se suele 
+  #emplear un término de interacción como una estimación del error experimental (esto en el supuesto
+  #que no hay ningún efecto de interacción adicional presente). En este modelo es importante tener en 
+  #cuenta el orden de las interacciones porque este presenta una magnitud muy amplia. Todos estos tipos 
+  #de anova  depende del los requerimientos del científico y del diseño de su modelo experimental por 
+  #ejemplo  el diseño de parcela, este diseño proporciona información más precisa sobre la asignación de 
+  #factores dirigido a las parcelas divididas o subtramas a expensas de perder información sobre el factor 
+  #asignado a todas las parcelas.
+  
+  
+  #¿Es lo mismo dos factores que anidado? 
+    #-Modelo de diseños anidados en algunas situaciones no se pueden combinar todos los niveles de un factor
+  #con todos los niveles de otro, es decir, no se pueden determinar todos los posibles tratamientos que 
+  #aparecen al cruzar los factores,por ejemplo, ciertos niveles de B están ligados a ciertos niveles de A, 
+  #la presencia de un nivel de B depende de la de un cierto nivel de A; en este caso diremos que el factor B 
+  #está anidado en el factor A, y con Bj(i) indicaremos que el j¡ésimo nivel de B corresponde al i-ésimo de A, 
+  #por otro lado dos factores es un diseño de anova que permite estudiar simultáneamente los efectos de dos 
+  #fuentes de variación.-valores de una variable dependiente depende de dos factores de la interacción entre estos
+  
+  
+  #¿CuÃ¡l es el caso de los niveles de azÃºcar en los nectarios de gulupa y la maracuya? 
+  #Haga el anÃ¡lisis de varianza para este caso.
+  
+  Input = ("
+Var Fase  Azucarmg
+Gulupa  F1  0.97
+Gulupa  F2  8.25
+Gulupa  F3  35.34
+Gulupa  F4  32.14
+Gulupa  F1  0.97
+Gulupa  F2  8.25
+Gulupa  F2  12.56
+Gulupa  F2  6.25
+Gulupa  F2  8.36
+Gulupa  F2  4.852
+Gulupa  F2  11.2
+Gulupa  F2  8.56
+Gulupa  F1  1.2
+Gulupa  F1  0.5
+Gulupa  F1  0.35
+Gulupa  F1  0.89
+Gulupa  F1  0.96
+Gulupa  F3  25.34
+Gulupa  F3  39.35
+Gulupa  F3  30.23
+Gulupa  F3  34.2
+Gulupa  F3  30.25
+Gulupa  F3  38.26
+Gulupa  F3  33.5
+Gulupa  F3  33.5
+Gulupa  F4  31.25
+Gulupa  F4  37.25
+Gulupa  F4  28.36
+Maracuya    F1  0.5
+Maracuya    F1  0.3
+Maracuya    F1  0.2
+Maracuya    F2  5.6
+Maracuya    F2  8.3
+Maracuya    F2  6.5
+Maracuya    F2  4.2
+Maracuya    F2  6.32
+Maracuya    F2  5.25
+Maracuya    F3  19.8
+Maracuya    F3  14.2
+Maracuya    F3  21.3
+Maracuya    F3  22.5
+Maracuya    F3  22.65
+Maracuya    F4  35.2
+Maracuya    F4  32.54
+Maracuya    F4  35.25
+Maracuya    F4  30.25
+")
+  
+  Data = read.table(textConnection(Input),header=TRUE)
+  Data
+  
+  str(Data)
+  
+  #SUPUESTOS 
+  #Dependencia 
+  levels(Data$Fase)
+  #independientes 
+  
+  
+  # Identificando outliers
+  
+  boxplot(Data$Azucarmg ~Data$Var, xlab = "Var", ylab = "Azucar mg")
+  #outliers en F y M
+  OutVals = boxplot(Data$Azucarmg~Data$Var, xlab = "Var", ylab = "Azucar mg")$out
+  OutVals 
+  #No hay outliers
+  
+  #Distribucion normal
+  
+  #Se realizo un grafico Q-Q para evaluar 
+  #la normalidad, sin embargo tambien realizaremos
+  # otros test para confirmar
+  
+  ggplot(Data, aes(sample = Azucarmg , colour = Var )) +
+    stat_qq() +
+    stat_qq_line()
+  
+  # Utilizamos el test de Lilliefors , debido a que el 
+  # tamaño de la muestra es muy grande 
+  
+  Maracuya <- Data[which(Data$Var== "Maracuya"),] 
+  lillie.test(x = Maracuya$Azucarmg)# no son normales 
+  
+  
+  Gulupa <- Data [which(Data$Var== "Gulupa"),]
+  lillie.test(x = Gulupa$Azucarmg) # No es normal
+  
+  #Homogeneidad de varianzas
+  
+  leveneTest(Data$Azucarmg ~ Data$Var)
+  #Si  hay homogeneidad de varianzas, es decir, la varianza  es igual entre los variedades.
+  
+  
+   anova1 <- aov(Data$Azucarmg ~ Data$Fase + Data$Var)
+  summary(anova1) 
+  #Hay  diferencias entre las fases pues el p valor 2e-16  <0.05 y 
+  #también entre las variaciones de la  fruta, p valor 0.000468 < 0.05
+  
+  
+  anova2 <- aov(Data$Azucarmg ~ Data$Fase * Data$Var)
+  summary(anova2) 
+  #Hay diferencias entre las fases pvalor  2e-16 < 0.05
+  #entre las variantes de fruta  p valor 4.18e-06 < 0.05
+  #y entre las fases en conjunto con las variantes de fruta p valor 1.79e-06 < 0.05
+  
+  TukeyHSD(anova1)
+  #Hay diferencias significativas entre las medias de Maracuya y Gulupa para la concentracion de azucar. 
+  #Otras diferencias se presentan entre todas las fases menos entre la F4 y la F3, 
+ 
+  TukeyHSD(anova2)
+  #En la mayoria de combinaciones entre fase y variantes hay diferencias significativas
+  # Sin embargo hay algunas como entre la fase 2 de maracuya y la f2 de gulupa el cual 
+  # presenta medias iguales para la concentracion de azucar. Lo mismo ocurre para la F1 
+  # de maracuya y gulupa, entre otras fases y variantes que ocurre lo mismo 
