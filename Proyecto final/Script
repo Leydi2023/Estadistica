@@ -1,0 +1,396 @@
+#Algunos paquetes requeridos 
+#exploracion manual
+if(!require(ape)){install.packages("ape")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(ggridges)){install.packages("ggridges")}
+if(!require(plyr)){install.packages("plyr")}
+if(!require(Rmisc)){install.packages("Rmisc")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(biotools)){install.packages("biotools")}
+
+
+#Carga de los datos   
+
+library(readxl)
+  
+  PERROS <- read_excel("~/Estadistica Laboratorio/Proyecto/PERROS.xlsx")
+  
+  PERROS <- read_excel("PERROS.xlsx")
+  View(PERROS)
+  attach(PERROS)
+  names(PERROS) 
+  
+  #Modificamos las variables para que nos queden como factor 
+  ESTRATO=factor(PERROS$ESTRATO,levels = c(1:3),labels = c("Bajo", "Medio", "Alto"))
+  class(ESTRATO)
+  str(ESTRATO) 
+  ESTRATO
+  
+  
+  class(RAZA)
+  str(RAZA)
+  RAZA=factor(PERROS$RAZA,levels = c(1:2),labels = c("Puro", "Criollo"))
+  RAZA
+  
+  
+  class(SEXO)
+  str(SEXO)
+  SEXO=factor(PERROS$SEXO,levels = c(1:2),labels = c("Macho", "Hembra"))
+  SEXO
+  
+  #Miramos los estadisticos generales 
+  # Dar nombre a las filas 
+  
+  DATAPERROS=data.frame(ESTRATO,RAZA,SEXO,PESO)
+  summary(DATAPERROS)
+  
+   ##ATTACH DTA PERROS
+  attach(DATAPERROS)
+  
+  #Primer analisis de la muestra 
+  ESTRATO_BAJO
+  
+  mean(ESTRATO_BAJO$PESO)
+  
+  library(psych)
+  #Media armonica
+  harmonic.mean(ESTRATO_BAJO$PESO)
+  #Media geometrica
+  geometric.mean(ESTRATO_BAJO$PESO)
+  #Mediana 
+  median(ESTRATO_BAJO$PESO)
+  #Moda
+  mi.moda <- function (n){
+    x <- table (n)
+    moda <- x [which.max(x)]
+    return(moda) 
+  }
+  mi.moda(ESTRATO_BAJO$PESO)
+  
+  Peso_estrato_bajo <- (ESTRATO_BAJO$PESO)
+  # distribución de frecuencias de Body Length
+  
+  range(ESTRATO_BAJO$PESO)
+  
+  hist(Peso_estrato_bajo, # histogram
+       col = "peachpuff", # column color
+       border = "black", 
+       prob = TRUE, # show densities instead of frequencies
+       xlim = c(0,36),
+       xlab = "Peso Kg",
+       main = "Frecuencias de pesos de perros de estrato bajo ")
+  lines(density(Peso_estrato_bajo),
+        lwd = 2, # thickness of line
+        col = "chocolate3") # Generar la distribución continua distribución de masa a partir de los datos observados
+  
+  # Graficar la media
+  abline(v = mean(Peso_estrato_bajo),
+         col = "royalblue",
+         lwd = 2)
+  # Graficra la mediana 
+  abline(v = median(Peso_estrato_bajo),
+         col = "red",
+         lwd = 2)
+  #Graficar la moda
+  abline(v = 12,
+         col = "pink",
+         lwd = 2)
+  
+  
+  legend(x = "topright", # location of legend within plot area
+         c("Density plot", "Mean", "Median","Moda" ),
+         col = c("chocolate3", "royalblue", "red", "pink"),
+         lwd = c(2, 2, 2))
+  #MEDIDAS DE POSICION DE ESTRATO BAJO 
+  
+  density.default(Peso_estrato_bajo)
+  quantile(Peso_estrato_bajo)
+  summary(Peso_estrato_bajo)
+  
+  
+  
+  ESTRATO_MEDIO
+  
+  mean(ESTRATO_MEDIO$PESO)
+  
+  
+  #Media armonica
+  harmonic.mean(ESTRATO_MEDIO$PESO)
+  #Media geometrica
+  geometric.mean(ESTRATO_MEDIO$PESO)
+  #Mediana 
+  median(ESTRATO_MEDIO$PESO)
+  #Moda
+  mi.moda <- function (n){
+    x <- table (n)
+    moda <- x [which.max(x)]
+    return(moda) 
+  }
+  mi.moda(ESTRATO_MEDIO$PESO)
+  
+  Peso_estrato_medio <- (ESTRATO_MEDIO$PESO)
+  # distribución de frecuencias de Body Length
+  
+  range(ESTRATO_MEDIO$PESO)
+  
+  hist(Peso_estrato_medio, # histogram
+       col = "peachpuff", # column color
+       border = "black", 
+       prob = TRUE, # show densities instead of frequencies
+       xlim = c(0,35),
+       xlab = "Peso Kg",
+       main = "Frecuencias de pesos de perros de estrato medio ")
+  lines(density(Peso_estrato_medio),
+        lwd = 2, # thickness of line
+        col = "chocolate3") # Generar la distribución continua distribución de masa a partir de los datos observados
+  
+  # Graficar la media
+  abline(v = mean(Peso_estrato_medio),
+         col = "royalblue",
+         lwd = 2)
+  # Graficra la mediana 
+  abline(v = median(Peso_estrato_medio),
+         col = "red",
+         lwd = 2)
+  #Graficar la moda
+  abline(v = 2.2,
+         col = "pink",
+         lwd = 2)
+  
+  
+  legend(x = "topright", # location of legend within plot area
+         c("Density plot", "Mean", "Median","Moda" ),
+         col = c("chocolate3", "royalblue", "red", "pink"),
+         lwd = c(2, 2, 2))
+  #MEDIDAS DE POSICION DE ESTRATO MEDIO 
+  density.default(Peso_estrato_medio)
+  quantile(Peso_estrato_medio)
+  summary(Peso_estrato_medio)
+  
+  
+  ESTRATO_ALTO
+  
+  mean(ESTRATO_ALTO$PESO)
+  
+  
+  #Media armonica
+  harmonic.mean(ESTRATO_ALTO$PESO)
+  #Media geometrica
+  geometric.mean(ESTRATO_ALTO$PESO)
+  #Mediana 
+  median(ESTRATO_ALTO$PESO)
+  #Moda
+  mi.moda <- function (n){
+    x <- table (n)
+    moda <- x [which.max(x)]
+    return(moda) 
+  }
+  mi.moda(ESTRATO_ALTO$PESO)
+  
+  Peso_estrato_alto <- (ESTRATO_ALTO$PESO)
+  # distribución de frecuencias de Body Length
+  
+  range(ESTRATO_ALTO$PESO)
+  
+  hist(Peso_estrato_alto, # histogram
+       col = "peachpuff", # column color
+       border = "black", 
+       prob = TRUE, # show densities instead of frequencies
+       xlim = c(0,40),
+       xlab = "Peso Kg",
+       main = "Frecuencias de pesos de perros de estrato alto ")
+  lines(density(Peso_estrato_alto),
+        lwd = 2, # thickness of line
+        col = "chocolate3") # Generar la distribución continua distribución de masa a partir de los datos observados
+  
+  # Graficar la media
+  abline(v = mean(Peso_estrato_alto),
+         col = "royalblue",
+         lwd = 2)
+  # Graficra la mediana 
+  abline(v = median(Peso_estrato_alto),
+         col = "red",
+         lwd = 2)
+  #Graficar la moda
+  abline(v = 10.9,
+         col = "pink",
+         lwd = 2)
+  
+  legend(x = "topright", # location of legend within plot area
+         c("Density plot", "Mean", "Median","Moda" ),
+         col = c("chocolate3", "royalblue", "red", "pink"),
+         lwd = c(2, 2, 2))
+  
+  #MEDIDAS DE POSICION DE ESTRATO ALTO 
+  density.default(Peso_estrato_alto)
+  quantile(Peso_estrato_alto)
+  summary(Peso_estrato_alto)
+  
+  
+  summary(DATAPERROS)
+  summary(ESTRATO_ALTO)
+  summary(ESTRATO_MEDIO)
+  summary(ESTRATO_BAJO)
+  
+  
+  #Desviacion estadar de las variables
+  #Desviación estándar de las dos variables según la época del año
+  sd(Peso_estrato_alto)
+  sd(Peso_estrato_bajo)
+  sd(Peso_estrato_medio)
+
+  #Exploracion de los datos 
+  
+  p1 <- ggplot(data = DATAPERROS, mapping = aes(x = SEXO, y = PESO)) +
+    geom_boxplot() +
+    theme_bw()
+  p2 <- ggplot(data = DATAPERROS, mapping = aes(x = RAZA, y = PESO)) +
+    geom_boxplot() +
+    theme_bw()
+  p3 <- ggplot(data = DATAPERROS, mapping = aes(x = ESTRATO, y = PESO, colour = SEXO)) +
+    geom_boxplot() +
+    theme_bw()
+  
+  grid.arrange(p1, p2, ncol = 2)
+  
+  p3
+  # Presencia de Outliners 
+  
+    ggplot(DATAPERROS,aes(x = PESO, colour = RAZA)) +
+    geom_line(stat = "density") +
+    facet_wrap(~ESTRATO)
+  
+  ggplot(DATAPERROS)+
+    geom_boxplot(aes(x=SEXO,y= PESO, fill=ESTRATO))
+# Presencia de Outliners 
+  
+  ggplot(DATAPERROS, aes(sample = PESO, colour = ESTRATO)) +
+    stat_qq() +
+    stat_qq_line()
+  
+  qqPlot(PESO,groups = ESTRATO,)
+  
+  
+# Supuestos basicos del ANOVA:
+  #Supuesto de independencia 
+  #Supuesto de Normalidad
+  #Supuesto de Homocedasticidad
+  
+  #COMPROBACION DE SUPUESTO 
+  #SUPUESTO DE NORMALIDAD: Para contrastar la normalidad usamos el
+  #test de lillie.test  
+  
+  #H0 = Los datos provienen de una población distribuida normalmente.
+  #HA = Los datos provienen de un población que no se distribuye normalmente.
+  
+  install.packages("nortest")
+  library(nortest)
+  
+  by(PESO,ESTRATO,lillie.test)# No presentan una distribucion normal 
+  by(PESO,SEXO,lillie.test)#Tampoco siguen una distribucion normal 
+  by(PESO, RAZA,lillie.test)#Igualmente no siguen una distribucion normal 
+
+  #Interpretacion 
+  #Interpretación: 
+  #Para todos los grupos de ESTRATO, SEXO Y RAZA se obtiene un p-value menor de 
+  #0.05, podemos rechazar la hipótesis nula 
+  #(hipótesis de normalidad). Por lo tanto, podemos concluir que nuestros 
+  #datos NO cumplen el supuesto de normalidad.
+  
+  
+  #SUPUESTO DE  HOMOESTACIDAD
+  ##########
+  library(reshape2)
+  library(car)
+  
+  leveneTest(DATAPERROS$PESO ~ DATAPERROS$ESTRATO)
+  #Varianza no es igual entre los grupos, p-value menor a 0.05
+
+  leveneTest(DATAPERROS$PESO ~ DATAPERROS$RAZA)
+  #Varianza no es igual entre los grupos, p- value menor a 0.05
+  
+  leveneTest(PESO ~ SEXO)
+  #Varianza igual entre los grupos, p-value mayor a 0.05 (0.30).
+
+  
+   #TRANSFORMAR 
+  skewness(PESO)
+  #La distribucion es moderadamente sesgada 
+  kurtosis(PESO)
+  #Leptocurtica
+  
+  #Transformacion de raiz cuadrada  
+   pesotrans<-sqrt(PESO)
+   #Se vuelve a mirar el supuesto de normalidad 
+   
+  by(pesotrans, ESTRATO,shapiro.test)
+  #Obtenemos que para todos los estratos se obtiene un p-value
+  #mayor de 0.05, no podemos rechazar
+  #la hipotesis nula( hipotesis de normalidad)
+  #Conlcluimos que nuestros datos cumplen el supuesto de normalidad
+
+
+  # library
+  library(multcompView)
+  
+#Interacciones
+  
+  #H0= medias de los niveles de los factores igual en cada estrato
+  #HA= medias de los niveles de los factores al menos una es diferente.
+  
+  #ANOVA 
+  
+  #Cual de los factores tiene incidencia en el peso de los perros?
+
+  
+  
+  fitTrat2 <- aov( pesotrans ~ ESTRATO * RAZA, data = DATAPERROS )
+  summary( fitTrat2 )
+  
+  #La variable ESTRATO tiene un efecto significativo, la raza no y no hay
+  #interacción entre ambas, esto es, se acepta la hipótesis nula
+  
+  
+  interaction.plot( RAZA, ESTRATO, pesotrans,
+                    ylim = c( 1, 7 ),
+                    col = c( "orange", "blue" ,"pink"),
+                    lty = c( 1, 12 ),
+                    lwd = 2,
+                    ylab = "media del peso Kg transformado",
+                    xlab = "Raza", trace.label = "ESTRATO" )
+  
+  options( contrasts = c("contr.sum", "contr.poly") )
+  
+  fitDatos <- aov( pesotrans ~ ESTRATO * RAZA, data = DATAPERROS )
+  library( car )
+  Anova( fitDatos, type = "III" )
+
+  
+  #Otra interaccion 
+  
+  fitTrat3 <- aov( pesotrans ~ ESTRATO * SEXO, data = DATAPERROS )
+  summary( fitTrat3 )
+  
+  #Hay diferencias entre estratos y hay interaccion entre el estrato y el sexo 
+  #Para saber entre que estratos ocurre y  entre que estratos y sexo ocurre hacemos 
+  # un TukeyHSD
+  
+  TUKEYfit3 <- TukeyHSD(fitTrat3)
+  TUKEYfit3
+
+  
+#GRAFICAS DE LAS INTERACCIONES 
+  
+  ggplot(data = DATAPERROS, aes(x =ESTRATO , y = pesotrans, colour = RAZA,
+                                group = RAZA)) +
+    stat_summary(fun.y = mean, geom = "point") +
+    stat_summary(fun.y = mean, geom = "line") +
+    labs(y  =  'mean (pesotrans)') +
+    theme_bw()
+  
+  ggplot(data = DATAPERROS, aes(x = ESTRATO, y = pesotrans, colour = SEXO,
+                                group = SEXO)) +
+    stat_summary(fun.y = mean, geom = "point") +
+    stat_summary(fun.y = mean, geom = "line") +
+    labs(y  =  'mean (pesotrans)') +
+    theme_bw()    
